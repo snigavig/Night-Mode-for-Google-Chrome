@@ -1,18 +1,33 @@
-var state = new Boolean;
-state = false;
+tabs = {};
+
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
     chrome.pageAction.show(tab.id);
+    if (tabs[tab.id]){
+        chrome.pageAction.trigger('click');
+    }
 });
 
 chrome.pageAction.onClicked.addListener(function(tab) {
-    if (!state){
+    var tabId = tab.id;
+    console.log(tabs);
+    if (tabs[tabId]){
+        if (!tabs[tabId].state) {
+            tabs[tabId].state = true;
+            chrome.tabs.executeScript(null,{file: "js/on.js"});
+            chrome.tabs.executeScript({code: "runOn();"});
+        } else {
+            tabs[tabId].state = false;
+            chrome.tabs.executeScript(null,{file: "js/off.js"});
+            chrome.tabs.executeScript({code: "runOff();"});
+        }
+    } else {
+        tabs[tabId] = {};
+        tabs[tabId].state = true;
         chrome.tabs.executeScript(null,{file: "js/on.js"});
         chrome.tabs.executeScript({code: "runOn();"});
-        state = true;
-    } else {
-        chrome.tabs.executeScript(null,{file: "js/off.js"});
-        chrome.tabs.executeScript({code: "runOff();"});
-        state = false;
+        chrome.tabs.getSelected(null,function(tab) {
+            tabs[tabId].url = tab.url;
+        });
     }
-    chrome.pageAction.setIcon({tabId: tab.id, path:"images/icon19-" + state + ".png"});
+    chrome.pageAction.setIcon({tabId: tab.id, path:"images/icon19-" + tabs[tabId].state + ".png"});
 });
