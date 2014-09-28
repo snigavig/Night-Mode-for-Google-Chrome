@@ -2,7 +2,7 @@
     "name": "Night Mode for Google Chrome™",
     "short_name": "Night Mode",
     "description": "Inverts page's colors to make it more readable at night",
-    "version": "0.4",
+    "version": "0.4.1",
     "permissions": ["tabs", "http://*/", "background","<all_urls>"],
     "icons": {
         "128": "images/icon128.png"

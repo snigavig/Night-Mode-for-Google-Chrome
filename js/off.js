@@ -1,4 +1,4 @@
-function runOff(){
+function off(){
     var css = 'html {-webkit-filter: invert(0%);!important} img {-webkit-filter: invert(0%);!important}',
         head = document.getElementsByTagName('head')[0],
         style = document.createElement('style');
