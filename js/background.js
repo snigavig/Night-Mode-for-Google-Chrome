@@ -2,7 +2,7 @@ tabs = {};
 
 executeScripts = function(tab, action){
     var tabId = tab.id;
-    action = action || tabs[tab.id].state && "off" || "on";
+    action = action || (tabs[tab.id].state && "off" || "on");
     if (tabs[tabId]){
         tabs[tabId].state = action == "on" && true || false;
         chrome.tabs.executeScript(null, {file: "js/" + action + ".js"});
@@ -16,7 +16,7 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
         var tabId = tab.id;
         chrome.pageAction.show(tabId);
 
-        if (tabs[tabId] && info.url && info.status.toUpperCase() === "LOADING") {
+        if (tabs[tabId] && tabs[tabId].state && info.url && info.status.toUpperCase() === "LOADING") {
             var urlCur = info.url;
             var urlLast = tabs[tabId].url;
             var urlContainerCur = document.createElement('a');
@@ -35,8 +35,10 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
             }
         }
 
-        tabs[tabId] = {};
-        tabs[tabId].state = false;
+        if (!tabs[tabId]){
+            tabs[tabId] = {};
+           // if (!tabs[tabId].state) tabs[tabId].state = false;
+        }
 
         chrome.tabs.getSelected(null,function(tab) {
             tabs[tabId].url = tab.url;
