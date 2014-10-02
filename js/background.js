@@ -2,13 +2,18 @@ tabs = {};
 
 executeScripts = function(tab, action){
     var tabId = tab.id;
-    action = action || (tabs[tab.id].state && "off" || "on");
-    if (tabs[tabId]){
-        tabs[tabId].state = action == "on" && true || false;
-        chrome.tabs.executeScript(null, {file: "js/" + action + ".js"});
-        chrome.tabs.executeScript({code: action + "();"});
-        chrome.pageAction.setIcon({tabId: tab.id, path:"images/icon19-" + tabs[tabId].state + ".png"});
+    if (!tabs[tabId]){
+        tabs[tabId] = {};
+
+        chrome.tabs.getSelected(null,function(tab) {
+            tabs[tabId].url = tab.url;
+        });
     }
+    action = action || (tabs[tab.id].state && "off" || "on");
+
+    tabs[tabId].state = action == "on" && true || false;
+    chrome.tabs.executeScript({code: action + "();"});
+    chrome.pageAction.setIcon({tabId: tab.id, path:"images/icon19-" + tabs[tabId].state + ".png"});
 };
 
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
@@ -16,33 +21,25 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
         var tabId = tab.id;
         chrome.pageAction.show(tabId);
 
-        if (tabs[tabId] && tabs[tabId].state && info.url && info.status.toUpperCase() === "LOADING") {
+        if (tabs[tabId] && tabs[tabId].state && info.url && tabs[tabId].url != info.url && info.status.toUpperCase() === "LOADING") {
             var urlCur = info.url;
             var urlLast = tabs[tabId].url;
             var urlContainerCur = document.createElement('a');
-            var domainCur = '';
-            var domainLast = '';
             var urlContainerLast = document.createElement('a');
+            var locationCur = '';
+            var locationLast = '';
 
             urlContainerCur.href = urlCur;
             urlContainerLast.href = urlLast;
-            domainLast = urlContainerLast.hostname;
-            domainCur = urlContainerCur.hostname;
+            locationLast = urlContainerLast.hostname + urlContainerLast.pathname;
+            locationCur = urlContainerCur.hostname + urlContainerCur.pathname;
 
-            if (domainCur !== domainLast) {
-                window.executeScripts(tab, "on");
+            if (locationCur !== locationLast && tabs[tabId].state) {
+                tabs[tabId].state = false;
                 tabs[tabId].url = urlCur;
+                window.executeScripts(tab, "on");
             }
         }
-
-        if (!tabs[tabId]){
-            tabs[tabId] = {};
-           // if (!tabs[tabId].state) tabs[tabId].state = false;
-        }
-
-        chrome.tabs.getSelected(null,function(tab) {
-            tabs[tabId].url = tab.url;
-        });
 
         chrome.pageAction.onClicked.addListener(function(tab) {
             window.executeScripts(tab);

@@ -13,21 +13,17 @@ function on(){
     };
 
     var css = 'html {-webkit-filter: invert(100%);!important} img {-webkit-filter: invert(75%);!important} .gcff-night-mode-marked {-webkit-filter: invert(75%);!important}',
-        head = document.getElementsByTagName('head')[0],
-        style = document.getElementById('gcff-night-mode');
+        head = document.getElementsByTagName('head')[0];
 
-    if (!style) {
-        style = document.createElement('style');
-        style.type = 'text/css';
-        style.appendChild(document.createTextNode(css));
-        style.setAttribute('id', 'gcff-night-mode');
+
+    style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode(css));
+    style.setAttribute('id', 'gcff-night-mode');
+
+    if (!document.getElementById('gcff-night-mode')) {
         head.appendChild(style);
-
     } else {
-        style = document.createElement('style');
-        style.type = 'text/css';
-        style.appendChild(document.createTextNode(css));
-        style.setAttribute('id', 'gcff-night-mode');
         head.replaceChild(style, document.getElementById('gcff-night-mode'));
     }
 
