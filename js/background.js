@@ -17,22 +17,23 @@ executeScripts = function(tab, action){
 };
 
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
+
     if (info.url && info.url.substr(0,"chrome".length) !== "chrome") {
         var tabId = tab.id;
+
         chrome.pageAction.show(tabId);
 
         if (tabs[tabId] && tabs[tabId].state && info.url && tabs[tabId].url != info.url && info.status.toUpperCase() === "LOADING") {
-            var urlCur = info.url;
-            var urlLast = tabs[tabId].url;
-            var urlContainerCur = document.createElement('a');
-            var urlContainerLast = document.createElement('a');
-            var locationCur = '';
-            var locationLast = '';
+            var urlCur = info.url,
+                urlLast = tabs[tabId].url,
+                urlContainerCur = document.createElement('a'),
+                urlContainerLast = document.createElement('a');
 
             urlContainerCur.href = urlCur;
             urlContainerLast.href = urlLast;
-            locationLast = urlContainerLast.hostname + urlContainerLast.pathname;
-            locationCur = urlContainerCur.hostname + urlContainerCur.pathname;
+
+            var locationLast = urlContainerLast.hostname + urlContainerLast.pathname,
+                locationCur = urlContainerCur.hostname + urlContainerCur.pathname;
 
             if (locationCur !== locationLast && tabs[tabId].state) {
                 tabs[tabId].state = false;
@@ -40,9 +41,9 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
                 window.executeScripts(tab, "on");
             }
         }
-
-        chrome.pageAction.onClicked.addListener(function(tab) {
-            window.executeScripts(tab);
-        });
     }
+});
+
+chrome.pageAction.onClicked.addListener(function(tab) {
+    window.executeScripts(tab);
 });
