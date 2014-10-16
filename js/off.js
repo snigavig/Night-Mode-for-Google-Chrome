@@ -1,5 +1,5 @@
 function off(){
-    var css = 'html {-webkit-filter: invert(0%);!important} img {-webkit-filter: invert(0%);!important}',
+    var css = 'html {-webkit-filter: invert(0%);!important} img, object[type="application/x-shockwave-flash"], embed[type="application/x-shockwave-flash"] {-webkit-filter: invert(0%);!important}',
         head = document.getElementsByTagName('head')[0],
         style = document.createElement('style');
 

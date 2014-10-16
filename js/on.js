@@ -12,8 +12,7 @@ function on(){
                 .addClass('gcff-night-mode-marked');
     };
 
-    //TODO: Add flash application/x-shockwave-flash
-    var css = 'html {-webkit-filter: invert(100%);!important} img {-webkit-filter: invert(75%);!important} .gcff-night-mode-marked {-webkit-filter: invert(75%);!important}',
+    var css = 'html {-webkit-filter: invert(100%);!important} img, object[type="application/x-shockwave-flash"], embed[type="application/x-shockwave-flash"], .gcff-night-mode-marked {-webkit-filter: invert(75%);!important}',
         head = document.getElementsByTagName('head')[0];
 
 
