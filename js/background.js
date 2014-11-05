@@ -1,24 +1,22 @@
 tabs = {};
 
-executeScripts = function(tab, action){
+window.executeScripts = function(tab, action){
     var tabId = tab.id;
     if (!tabs[tabId]){
         tabs[tabId] = {};
-
         chrome.tabs.getSelected(null,function(tab) {
             tabs[tabId].url = tab.url;
         });
     }
-    action = action || (tabs[tab.id].state && "off" || "on");
+    action = action || !tabs[tab.id].state;
 
-    tabs[tabId].state = action == "on" && true || false;
-    chrome.tabs.executeScript({code: action + "();"});
-    chrome.pageAction.setIcon({tabId: tab.id, path:"images/icon19-" + tabs[tabId].state + ".png"});
+    tabs[tabId].state = action;
+    chrome.tabs.executeScript({code: "gcffNightMode.turn" + (action && "on" || "off") + "();"});
+    chrome.pageAction.setIcon({tabId: tab.id, path:"images/moon-19x19-" + action + ".png"});
 };
 
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
-
-    if (info.url && info.url.substr(0,"chrome".length) !== "chrome") {
+    if (info.url && info.url.substr(0,"chrome".length) !== "chrome" && !info.favIconUrl) {
         var tabId = tab.id;
 
         chrome.pageAction.show(tabId);
@@ -38,7 +36,7 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
             if (locationCur !== locationLast && tabs[tabId].state) {
                 tabs[tabId].state = false;
                 tabs[tabId].url = urlCur;
-                window.executeScripts(tab, "on");
+                window.executeScripts(tab, true);
             }
         }
     }
