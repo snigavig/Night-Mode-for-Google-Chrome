@@ -1,8 +1,8 @@
 ﻿{
-    "name": "Night Mode for Google Chrome™",
+    "name": "Night Mode for Google Chrome™ beta",
     "short_name": "Night Mode",
     "description": "Inverts page's colors to make it more readable at night",
-    "version": "0.4.4",
+    "version": "0.4.5",
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "permissions": ["tabs","activeTab", "http://*/", "background","<all_urls>"],
     "icons": {

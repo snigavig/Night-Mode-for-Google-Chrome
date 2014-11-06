@@ -16,28 +16,28 @@ window.executeScripts = function(tab, action){
 };
 
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
-    if (info.url && info.url.substr(0,"chrome".length) !== "chrome" && !info.favIconUrl) {
-        var tabId = tab.id;
+    var tabId = tab.id;
+    chrome.pageAction.show(tabId);
+    if (tab.url && tab.url.substr(0,"chrome".length) === "chrome") {
+        chrome.pageAction.hide(tabId);
+    }
 
-        chrome.pageAction.show(tabId);
+    if (tabs[tabId] && tabs[tabId].state && info.url && tabs[tabId].url != info.url && info.status.toUpperCase() === "LOADING") {
+        var urlCur = info.url,
+            urlLast = tabs[tabId].url,
+            urlContainerCur = document.createElement('a'),
+            urlContainerLast = document.createElement('a');
 
-        if (tabs[tabId] && tabs[tabId].state && info.url && tabs[tabId].url != info.url && info.status.toUpperCase() === "LOADING") {
-            var urlCur = info.url,
-                urlLast = tabs[tabId].url,
-                urlContainerCur = document.createElement('a'),
-                urlContainerLast = document.createElement('a');
+        urlContainerCur.href = urlCur;
+        urlContainerLast.href = urlLast;
 
-            urlContainerCur.href = urlCur;
-            urlContainerLast.href = urlLast;
+        var locationLast = urlContainerLast.hostname + urlContainerLast.pathname,
+            locationCur = urlContainerCur.hostname + urlContainerCur.pathname;
 
-            var locationLast = urlContainerLast.hostname + urlContainerLast.pathname,
-                locationCur = urlContainerCur.hostname + urlContainerCur.pathname;
-
-            if (locationCur !== locationLast && tabs[tabId].state) {
-                tabs[tabId].state = false;
-                tabs[tabId].url = urlCur;
-                window.executeScripts(tab, true);
-            }
+        if (locationCur !== locationLast && tabs[tabId].state) {
+            tabs[tabId].state = false;
+            tabs[tabId].url = urlCur;
+            window.executeScripts(tab, true);
         }
     }
 });
