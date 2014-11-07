@@ -3,7 +3,7 @@ gcffNightMode = function(){
     this.observer = null;
 
     this.turnoff = function(){
-        var css = 'html {-webkit-filter: invert(0%);!important} img, object[type="application/x-shockwave-flash"], embed[type="application/x-shockwave-flash"] {-webkit-filter: invert(0%);!important}',
+        var css = 'html {-webkit-filter: invert(0%)} img, object[type="application/x-shockwave-flash"], embed[type="application/x-shockwave-flash"] {-webkit-filter: invert(0%)!important;}',
             head = document.getElementsByTagName('head')[0],
             style = document.createElement('style');
 
@@ -33,7 +33,7 @@ gcffNightMode = function(){
             $('iframe').addClass('gcff-night-mode-marked');
         };
 
-        var css = 'html {-webkit-filter: invert(100%);!important} img, object[type="application/x-shockwave-flash"], embed[type="application/x-shockwave-flash"], .gcff-night-mode-marked {-webkit-filter: invert(75%);!important}',
+        var css = 'html {-webkit-filter: invert(100%)!important;} img, object[type="application/x-shockwave-flash"], embed[type="application/x-shockwave-flash"], .gcff-night-mode-marked {-webkit-filter: invert(90%)!important;}',
             head = document.getElementsByTagName('head')[0];
 
 
